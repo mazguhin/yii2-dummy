@@ -1,0 +1,8 @@
+User-agent: Yandex
+Disallow: /*utm_
+
+User-agent: Googlebot
+Disallow: /*utm_
+
+User-agent: *
+Allow: /*utm_

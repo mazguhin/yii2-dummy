@@ -1,0 +1,10 @@
+/.idea
+/app/frontend/runtime
+/app/public/assets/js
+/app/public/assets/css
+/tmp
+/node_modules
+/app/composer.lock
+/app/frontend/web/index.html
+/app/frontend/web/map.html
+/app/frontend/web/wall.html

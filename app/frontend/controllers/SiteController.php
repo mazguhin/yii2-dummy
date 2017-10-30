@@ -2,8 +2,6 @@
 namespace frontend\controllers;
 
 use common\components\helpers\HashHelper;
-use common\components\MailAPI;
-use common\models\Participant;
 use Yii;
 use yii\data\Pagination;
 use yii\web\Controller;

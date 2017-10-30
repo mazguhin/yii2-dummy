@@ -9,12 +9,8 @@
 namespace frontend\controllers;
 
 use common\components\ApiErrorHandler;
-use common\models\Account;
-use common\models\App;
-use common\models\Photo;
 use Yii;
 use yii\web\Controller;
-use yii\web\UploadedFile;
 
 class ApiController extends Controller
 {

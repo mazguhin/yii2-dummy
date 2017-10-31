@@ -2,6 +2,7 @@
 
 namespace common\modules\dummyapi\controllers;
 
+use common\models\App;
 use Yii;
 use yii\data\Pagination;
 use yii\helpers\Json;
@@ -67,12 +68,8 @@ class BaseApiController extends Controller
      */
     public function isPost()
     {
-        if(!Yii::$app->request->isPost){
-            return [
-                'success' => false,
-                'errors' => 'Метод не поддерживается',
-                'code' => 405,
-            ];
+        if(!Yii::$app->request->isPost) {
+            return App::makeErrorResponse(405);
         }
     }
 
@@ -166,12 +163,12 @@ class BaseApiController extends Controller
             $model = ($this->modelClass)::filterAllowDisplayFields($model);
         }
 
-        return [
+        return App::makeResponse([
             'participants' => $models,
             'total' => $pages->totalCount,
             'defaultPageSize' => $pages->defaultPageSize,
             'pageSizeLimit' => $pages->pageSizeLimit,
-        ];
+        ]);
     }
 
     /**
@@ -185,27 +182,18 @@ class BaseApiController extends Controller
         $model = $this->findModel($id);
 
         if ($model === false) {
-            return [
-                'success' => false,
-                'error' => 'Запись не найдена',
-                'code' => 404,
-            ];
+            return App::makeErrorResponse(404);
         }
 
         $model = ($this->modelClass)::$filterAllowDisplayFields($model);
         if ($model === false) {
-            return [
-                'success' => false,
-                'error' => 'Возникла ошибка на сервере',
-                'code' => 500,
-            ];
+            return App::makeErrorResponse(500);
         }
 
 
-        return [
-            'success' => true,
+        return App::makeResponse([
             'item' => $model,
-        ];
+        ]);
     }
 
     /**
@@ -227,24 +215,15 @@ class BaseApiController extends Controller
 
         if (!$model->save()) {
             if (empty($model->getErrors())) {
-                return [
-                    'success' => false,
-                    'error' => 'При сохранении возникла ошибка',
-                    'code' => 500,
-                ];
+                return App::makeErrorResponse(500, 'При сохранении возникла ошибка');
             }
 
-            return [
-                'success' => false,
-                'error' => 'Введены неверные данные',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400);
         }
 
-        return [
-            'success' => true,
+        return App::makeResponse([
             'item' => $model,
-        ];
+        ]);
     }
 
     /**
@@ -263,29 +242,17 @@ class BaseApiController extends Controller
 
         $id = intval($id);
         if (empty($id)) {
-            return [
-                'success' => false,
-                'error' => 'Отсутствует обязательный параметр ID',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400, 'Отсутствует обязательный параметр ID');
         }
 
         try {
             $fields = Json::decode($data['fields']);
         } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => 'Введены неверные данные',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400);
         }
 
         if (empty($fields) || !is_array($fields)) {
-            return [
-                'success' => false,
-                'error' => 'Заполнены не все поля',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400, 'Заполнены не все поля');
         }
 
         foreach ($fields as $key => $field) {
@@ -296,34 +263,21 @@ class BaseApiController extends Controller
 
         $model = $this->findModel($id);
         if ($model === false) {
-            return [
-                'success' => false,
-                'error' => 'Запись не найдена',
-                'code' => 404,
-            ];
+            return App::makeErrorResponse(404);
         }
 
         $model->load($fields);
         if (!$model->save()) {
             if (empty($model->getErrors())) {
-                return [
-                    'success' => false,
-                    'error' => 'При сохранении возникла ошибка',
-                    'code' => 500,
-                ];
+                return App::makeErrorResponse(500, 'При сохранении возникла ошибка');
             }
 
-            return [
-                'success' => false,
-                'error' => 'Введены неверные данные',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400);
         }
 
-        return [
-            'success' => true,
+        return App::makeResponse([
             'item' => $model,
-        ];
+        ]);
     }
 
     /**
@@ -340,32 +294,18 @@ class BaseApiController extends Controller
 
         $id = intval($id);
         if (empty($id)) {
-            return [
-                'success' => false,
-                'error' => 'Отсутствует обязательный параметр ID',
-                'code' => 400,
-            ];
+            return App::makeErrorResponse(400, 'Отсутствует обязательный параметр ID');
         }
 
         $model = $this->findModel($id);
         if ($model === false) {
-            return [
-                'success' => false,
-                'error' => 'Запись не найдена',
-                'code' => 404,
-            ];
+            return App::makeErrorResponse(404);
         }
 
         if (!$model->delete()) {
-            return [
-                'success' => false,
-                'error' => 'При удалении возникла ошибка',
-                'code' => 500,
-            ];
+            return App::makeErrorResponse(500, 'При удалении возникла ошибка');
         }
 
-        return [
-            'success' => true,
-        ];
+        return App::makeResponse([]);
     }
 }

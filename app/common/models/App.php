@@ -13,79 +13,57 @@ use Yii;
 class App
 {
 
+    // коды ошибок и расшифровки
     public static $errors = [
-        1 => 'Метод не поддерживается',
-        2 => 'Необходимо заполнить хотя бы одно поле',
-        3 => 'Участница не найдена',
-        4 => 'Ошибки в переданных полях',
-        5 => 'Участник не найден',
-        6 => 'Отсутствует обязательный параметр',
-        7 => 'Действие невозможно на данном этапе конкурса',
-        8 => 'Не передан участник',
-        9 => 'Ошибка при обработке фото',
-        10 => 'Ошибка при обработке фото',
-        11 => 'Не удалось сохранить фото или модель',
-        12 => 'Участник не зарегистрирован',
-        13 => 'Зарегистрированный участник',
-        14 => 'Участник успешно зарегистрирован',
-        15 => 'Токен недействителен',
-        16 => 'Вы уже голосовали за данного кандидата',
-        17 => 'Кандидат отсутствует',
-        18 => 'Голос учтен',
-        19 => 'Участник уже зарегистрирован',
-        20 => 'Анкета успешно зарегистрирована',
-        21 => 'Анкета не зарегистрирована',
-        22 => 'У вас уже зарегистрирована анкета',
-        23 => 'Для продолжения необходимо зарегистрироваться в системе',
-        24 => 'При регистрации возникла ошибка',
-        25 => 'Нельзя голосовать за свою же анкету',
-        26 => 'Заполнены не все поля',
-        27 => 'Данный купон уже зарегистрирован',
-        28 => 'Возникла ошибка при сохранении',
-        29 => 'Купон успешно зарегистрирован',
+        400 => 'Введены неверные данные',
+        404 => 'Запись не найдена',
+        405 => 'Метод не поддерживается',
+        500 => 'Возникла ошибка на сервере',
+    ];
+
+    // коды информационных сообщений и расшифровки
+    public static $info = [
+
     ];
 
     /**
-     * Возвращает текущий этап проекта / устанавливает новый
-     * @param null $stage
-     * @return bool|null
+     * Сформировать ответ с ошибкой
+     * @param $error
+     * @return array
      */
-    public static function stage($stage = null) {
-        if (empty($stage)) {
-            return isset(Yii::$app->params['stage']) ? Yii::$app->params['stage'] : null;
+    public static function makeErrorResponse($error, $text = null)
+    {
+        $info = isset(self::$errors[$error]) ? self::$errors[$error] : 'Возникла ошибка на сервере';
+        $prepare = [
+            'success' => false,
+            'code' => $error,
+            'errors' => $info
+        ];
+
+        if (isset($text)) {
+            $prepare['errors'] = $text;
         }
 
-        if ($stage >= 0 && $stage < count(Yii::$app->params['stages'])) {
-            Yii::$app->params['stage'] = $stage;
-            return true;
+        return $prepare;
+    }
+
+    /**
+     * Сформировать успешный ответ с информацией
+     * @param $data
+     * @param null $code
+     * @return array
+     */
+    public static function makeResponse($data, $code = null)
+    {
+        $response = array_merge($data, ['success' => true]);
+
+        if (!empty($code) && isset(self::$errors[$code])) {
+            $response = array_merge($response, [
+                'info' => self::$errors[$code],
+                'code' => $code
+            ]);
         }
 
-        return false;
-    }
-
-    /**
-     * Возвращает наименование текущего этапа проекта
-     * @return null
-     */
-    public static function stageName() {
-        $stage = self::stage();
-        return isset(Yii::$app->params['stages'][$stage]) ? Yii::$app->params['stages'][$stage] : null;
-    }
-
-    /**
-     * Возвращает массив с возможными этапами проекта
-     * @return null
-     */
-    public static function stages() {
-        return isset(Yii::$app->params['stages']) ? Yii::$app->params['stages'] : null;
-    }
-
-    /**
-     * Проверяет соответствие текущего и переданного этапа
-     * @param $stage
-     * @return bool
-     */
-    public static function validStage ($stage) {
-        return $stage == self::stage() ? true : false;
+        return $response;
     }
 }

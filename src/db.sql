@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 10 2017 г., 11:02
+-- Время создания: Окт 31 2017 г., 11:40
 -- Версия сервера: 5.7.16
 -- Версия PHP: 7.1.0
 
@@ -77,6 +77,17 @@ INSERT INTO `mail_types` (`id`, `name`, `template`, `title`, `auto_approve`, `co
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `task`
+--
+
+CREATE TABLE `task` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL COMMENT 'Заголовок'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `user`
 --
 
@@ -127,6 +138,12 @@ ALTER TABLE `mail_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `task`
+--
+ALTER TABLE `task`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `user`
 --
 ALTER TABLE `user`
@@ -153,6 +170,11 @@ ALTER TABLE `mail`
 --
 ALTER TABLE `mail_types`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT для таблицы `task`
+--
+ALTER TABLE `task`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблицы `user`
 --

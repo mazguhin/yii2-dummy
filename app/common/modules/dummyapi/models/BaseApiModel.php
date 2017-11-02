@@ -12,10 +12,10 @@ class BaseApiModel extends \yii\db\ActiveRecord
     // поля разрешенные для редактирования
     public static $allowEditFields = [];
 
-    // зашифрованные поля
+    // поля без шифрования
     public static $filterFields = [];
 
-    // поля без шифрования
+    // зашифрованные поля
     public static $cryptFilterFields = [];
 
     /**

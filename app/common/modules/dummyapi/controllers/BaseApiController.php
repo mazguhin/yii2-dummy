@@ -29,6 +29,20 @@ class BaseApiController extends Controller
     // стандартное количество записей на страницу
     public static $defaultPageSize = 100;
 
+    // сопостовление методов и типов запроса
+    public static $methodRules = [
+        'get' => [
+            'list',
+            'get'
+        ],
+
+        'post' => [
+            'create',
+            'update',
+            'delete'
+        ]
+    ];
+
     /**
      * @inheritdoc
      */
@@ -64,13 +78,19 @@ class BaseApiController extends Controller
     }
 
     /**
-     * Тип запроса POST?
+     * Проверка на соответствие метода и тип запроса
+     * @param $method
+     * @param $type
+     * @return array|bool
      */
-    public function isPost()
+    public static function validateMethod($method)
     {
-        if(!Yii::$app->request->isPost) {
-            return App::makeErrorResponse(405);
+        $type = Yii::$app->request->isGet ? 'get' : 'post';
+        if (isset(static::$methodRules[$type]) && in_array($method, static::$methodRules[$type])) {
+            return true;
         }
+
+        return App::makeErrorResponse(405);
     }
 
     /**
@@ -121,6 +141,11 @@ class BaseApiController extends Controller
      */
     public function actionList()
     {
+        $valid = static::validateMethod('list');
+        if ($valid !== true) {
+            return $valid;
+        }
+
         $get = Yii::$app->request->get();
         $pageSize = isset($get['limit']) ? intval($get['limit'] ) : static::$defaultPageSize;
 
@@ -178,6 +203,11 @@ class BaseApiController extends Controller
      */
     public function actionGet($id)
     {
+        $valid = static::validateMethod('get');
+        if ($valid !== true) {
+            return $valid;
+        }
+
         $id = intval($id);
         $model = $this->findModel($id);
 
@@ -185,7 +215,7 @@ class BaseApiController extends Controller
             return App::makeErrorResponse(404);
         }
 
-        $model = ($this->modelClass)::$filterAllowDisplayFields($model);
+        $model = ($this->modelClass)::filterAllowDisplayFields($model);
         if ($model === false) {
             return App::makeErrorResponse(500);
         }
@@ -202,9 +232,9 @@ class BaseApiController extends Controller
      */
     public function actionCreate()
     {
-        $isPost = $this->isPost();
-        if ($isPost['success'] === false) {
-            return $isPost;
+        $valid = static::validateMethod('create');
+        if ($valid !== true) {
+            return $valid;
         }
 
         $data = Yii::$app->request->post();
@@ -233,9 +263,9 @@ class BaseApiController extends Controller
      */
     public function actionUpdate($id)
     {
-        $isPost = $this->isPost();
-        if ($isPost['success'] === false) {
-            return $isPost;
+        $valid = static::validateMethod('update');
+        if ($valid !== true) {
+            return $valid;
         }
 
         $data = Yii::$app->request->post();
@@ -287,9 +317,9 @@ class BaseApiController extends Controller
      */
     public function actionDelete($id)
     {
-        $isPost = $this->isPost();
-        if ($isPost['success'] === false) {
-            return $isPost;
+        $valid = static::validateMethod('delete');
+        if ($valid !== true) {
+            return $valid;
         }
 
         $id = intval($id);

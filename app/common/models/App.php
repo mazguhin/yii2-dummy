@@ -37,11 +37,11 @@ class App
         $prepare = [
             'success' => false,
             'code' => $error,
-            'errors' => $info
+            'error' => $info
         ];
 
         if (isset($text)) {
-            $prepare['errors'] = $text;
+            $prepare['error'] = $text;
         }
 
         return $prepare;

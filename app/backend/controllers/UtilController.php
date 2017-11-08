@@ -44,9 +44,15 @@ class UtilController extends BaseController
      */
     public function actionDeploy()
     {
-        $script_filename = 'pull_repo.sh';
-        $script_file_path = Yii::getAlias('@sh') . DIRECTORY_SEPARATOR . $script_filename;
-        $result = trim(shell_exec($script_file_path . " 2>&1"));
+        $dir = dirname(dirname(Yii::getAlias('@common')));
+
+        $command = <<<BASH
+#!/bin/bash
+cd $dir
+git fetch --all && git reset --hard origin/master 2>&1
+BASH;
+
+        $result = trim(shell_exec($command));
         $result = preg_replace("#[^а-яА-ЯA-Za-z0-9;:_.,? -]+#u", '', $result);
         Yii::$app->getSession()->setFlash('success', $result);
 
@@ -59,9 +65,13 @@ class UtilController extends BaseController
      */
     public function actionRebuild_js_css()
     {
-        $script_filename = 'rebuild_css_js.sh';
-        $script_file_path = Yii::getAlias('@sh') . DIRECTORY_SEPARATOR . $script_filename;
-        $result = trim(shell_exec($script_file_path . " 2>&1"));
+        $command = <<<BASH
+#!/bin/bash
+grunt deploy 2>&1
+BASH;
+
+        $result = trim(shell_exec($command));
+
         $result = preg_replace("#[^а-яА-ЯA-Za-z0-9;:_.,? -]+#u", '', $result);
         Yii::$app->getSession()->setFlash('success', $result);
 

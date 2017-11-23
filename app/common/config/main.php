@@ -5,6 +5,18 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'cacheConsole' => [
+            'class' => \yii\caching\FileCache::class,
+            'cachePath' => \Yii::getAlias('@console') . '/runtime/cache'
+        ],
+        'cacheFrontend' => [
+            'class' => \yii\caching\FileCache::class,
+            'cachePath' => \Yii::getAlias('@frontend') . '/runtime/cache'
+        ],
+        'cacheBackend' => [
+            'class' => \yii\caching\FileCache::class,
+            'cachePath' => \Yii::getAlias('@backend') . '/runtime/cache'
+        ],
         'db' => [
             'class' => 'yii\db\Connection',
             'dsn' => 'mysql:host=localhost;dbname=dummy',

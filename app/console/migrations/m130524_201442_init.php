@@ -33,7 +33,6 @@ class m130524_201442_init extends Migration
             'status' => '1',
             'created_at' => time(),
             'updated_at' => time(),
-            'role' => 'Admin',
         ]);
     }
 

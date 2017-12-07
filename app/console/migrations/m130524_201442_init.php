@@ -20,19 +20,21 @@ class m130524_201442_init extends Migration
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
 
-            'status' => $this->smallInteger()->notNull()->defaultValue(10),
-            'created_at' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
+            'status' => $this->smallInteger()->notNull()->defaultValue(10)->comment('Статус'),
+            'created_at' => $this->integer()->notNull()->comment('Дата создания'),
+            'updated_at' => $this->integer()->notNull()->comment('Дата редактирования'),
+            'role' => $this->string(266)->null()->comment('Роль'),
         ], $tableOptions);
 
         $this->insert('{{%user}}', [
             'username' => 'admin',
             'auth_key' => '',
-            'password_hash' => \Yii::$app->security->generatePasswordHash('3Ft4MwBjwNTE2byjx'),
+            'password_hash' => \Yii::$app->security->generatePasswordHash('admin'),
             'email' => 'admin@admin.ru',
             'status' => '1',
             'created_at' => time(),
             'updated_at' => time(),
+            'role' => 'Admin',
         ]);
     }
 

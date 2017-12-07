@@ -11,7 +11,5 @@ $this->title = 'Административная панель';
 
     <div class="jumbotron">
         <h1>Текущий этап</h1>
-
-        <p class="lead"><?= $stages[$stage] ?></p>
     </div>
 </div>

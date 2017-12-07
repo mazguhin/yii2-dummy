@@ -60,10 +60,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index', [
-            'stage' => Yii::$app->params['stage'],
-            'stages' => Yii::$app->params['stages'],
-        ]);
+        return $this->render('index');
     }
 
     /**

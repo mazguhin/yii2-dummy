@@ -24,6 +24,17 @@ class m130524_201442_init extends Migration
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
+
+        $this->insert('{{%user}}', [
+            'username' => 'admin',
+            'auth_key' => '',
+            'password_hash' => \Yii::$app->security->generatePasswordHash('3Ft4MwBjwNTE2byjx'),
+            'email' => 'admin@admin.ru',
+            'status' => '1',
+            'created_at' => time(),
+            'updated_at' => time(),
+            'role' => 'Admin',
+        ]);
     }
 
     public function down()

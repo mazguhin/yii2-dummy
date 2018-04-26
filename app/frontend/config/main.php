@@ -18,11 +18,7 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'frontend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [
-        'api' => [
-//            'class' => 'app\modules\dummyapi\Module',
-        ],
-    ],
+    'modules' => [],
     'components' => [
         'formatter' => [
             'class' => 'common\components\Formatter'
@@ -63,9 +59,6 @@ return [
 //                // Task
 //                '/api/task/list' => 'task/list',
 //                '/api/task/get/<id:\d+>' => 'task/get',
-//                '/api/task/create' => 'task/create',
-//                '/api/task/update/<id:\d+>' => 'task/update',
-//                '/api/task/delete/<id:\d+>' => 'task/delete',
 //
 
                 /*

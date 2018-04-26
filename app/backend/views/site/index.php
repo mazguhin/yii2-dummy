@@ -5,11 +5,11 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Административная панель';
+$this->title = 'Панель управления';
 ?>
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Текущий этап</h1>
+        <h1>Панель управления</h1>
     </div>
 </div>

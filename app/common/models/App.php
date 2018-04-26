@@ -33,10 +33,18 @@ class App
      */
     public static function makeErrorResponse($error, $text = null)
     {
-        $info = isset(self::$errors[$error]) ? self::$errors[$error] : 'Возникла ошибка на сервере';
+        if (is_array($error)) {
+            $errorKeys = array_keys($error);
+            $errorKey = (!empty($errorKeys[0])) ? $errorKeys[0] : null;
+            $info = isset(self::$errors[$errorKey]) ? self::$errors[$errorKey] : 'Возникла ошибка на сервере';
+        } else {
+            $info = isset(self::$errors[$error]) ? self::$errors[$error] : 'Возникла ошибка на сервере';
+            $errorKey = $error;
+        }
+
         $prepare = [
             'success' => false,
-            'code' => $error,
+            'code' => $errorKey,
             'error' => $info
         ];
 
@@ -57,13 +65,35 @@ class App
     {
         $response = array_merge($data, ['success' => true]);
 
-        if (!empty($code) && isset(self::$errors[$code])) {
+        if (!empty($code) && isset(self::$info[$code])) {
             $response = array_merge($response, [
-                'info' => self::$errors[$code],
+                'info' => self::$info[$code],
                 'code' => $code
             ]);
         }
-
         return $response;
+    }
+
+    /**
+     * Вернуть csrf поле
+     * @return string
+     */
+    public static function csrf_field()
+    {
+        return '<input type="hidden" name="'.Yii::$app->request->csrfParam.'" value="'.Yii::$app->request->csrfToken.'" />';
+    }
+
+    /**
+     * Сформировать ответ
+     * @param $error
+     * @return string
+     */
+    public static function getJSONResponse($error, $text = null){
+        $data = self::makeErrorResponse($error, $text);
+
+        if(!empty($data)){
+            header("Content-type: application/json; charset=utf-8");
+            echo Json::encode($data);
+        }
     }
 }
